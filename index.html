@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gonçalo Louzada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  :root {
+    --accent: #b5483a;
+    --bg: #fafaf7;
+    --fg: #1a1a1a;
+    --muted: #6b6b66;
+    --rule: #e3e2dc;
+    --currently-bg: #f1efe7;
+    --heading-stack: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --body-stack: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body-stack);
+    font-size: 16.5px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+    transition: border-color 120ms ease;
+  }
+  a:hover { border-bottom-color: var(--accent); }
+  p { margin: 0 0 1em 0; text-wrap: pretty; }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  main {
+    max-width: 720px;
+    padding: 0 28px;
+    margin: 0 auto;
+  }
+
+  section {
+    padding: 64px 0;
+    border-top: 1px solid var(--rule);
+  }
+  section:first-of-type { border-top: 0; padding-top: 112px; }
+  section:last-of-type { padding-bottom: 88px; }
+
+  .label {
+    font-family: var(--heading-stack);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 28px 0;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero .eyebrow {
+    font-family: var(--heading-stack);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 28px 0;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: var(--heading-stack);
+    font-weight: 500;
+    font-size: clamp(28px, 5vw, 36px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px 0;
+    max-width: 22ch;
+  }
+  .hero .subline {
+    font-size: clamp(18px, 2.6vw, 20px);
+    line-height: 1.45;
+    color: var(--fg);
+    margin: 0 0 14px 0;
+    max-width: 42ch;
+  }
+  .hero .tertiary {
+    font-size: 16.5px;
+    color: var(--muted);
+    margin: 0 0 32px 0;
+    max-width: 50ch;
+  }
+  .hero .location {
+    font-family: var(--heading-stack);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero .location::before {
+    content: "\21B3";
+    color: inherit;
+    margin-right: 6px;
+    display: inline-block;
+    vertical-align: baseline;
+    font-weight: 400;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .about-photo {
+    width: 96px;
+    height: 96px;
+    border: 1px solid var(--rule);
+    background: #ecebe4;
+  }
+  .about-photo::part(empty) {
+    color: var(--muted);
+    font-family: var(--heading-stack);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+  }
+  .about-text p:last-child { margin-bottom: 0; }
+
+  /* CURRENTLY */
+  .currently-box {
+    background: var(--currently-bg);
+    padding: 28px 32px;
+    border-left: 3px solid var(--accent);
+  }
+  .currently-box p { margin: 0; }
+  .currently-box .tag {
+    font-family: var(--heading-stack);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 12px;
+    vertical-align: baseline;
+  }
+  .currently-box .tag .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    flex-shrink: 0;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  /* BUILT */
+  .built-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+  .card {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 22px 22px 20px 22px;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    transition: background 140ms ease;
+    cursor: default;
+    min-height: 150px;
+  }
+  .card:hover {
+    background: color-mix(in oklab, var(--accent) 5%, transparent);
+  }
+  .card:hover .card-name {
+    color: var(--accent);
+  }
+  .card-name {
+    font-family: var(--heading-stack);
+    font-weight: 500;
+    font-size: 15px;
+    margin: 0 0 6px 0;
+    transition: color 140ms ease;
+  }
+  .card-desc {
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
+  }
+  .card-stack {
+    font-family: var(--body-stack);
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 14px 0 0 0;
+  }
+
+  /* EXPERIENCE */
+  .timeline {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    row-gap: 22px;
+    column-gap: 24px;
+  }
+  .timeline .year {
+    font-family: var(--heading-stack);
+    font-size: 13px;
+    color: var(--muted);
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+  .timeline .role {
+    font-size: 15.5px;
+  }
+  .timeline .role .org {
+    color: var(--fg);
+  }
+  .timeline .role .what {
+    color: var(--muted);
+    display: block;
+    font-size: 14.5px;
+    margin-top: 2px;
+  }
+  .timeline .role .progression {
+    display: block;
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-top: 8px;
+    padding-left: 14px;
+    border-left: 1px solid var(--rule);
+    line-height: 1.65;
+  }
+
+  /* CONTACT */
+  .contact p { max-width: 52ch; margin-bottom: 0; }
+  .contact .links {
+    margin-top: 6px;
+    font-size: 16.5px;
+  }
+  .contact .links span {
+    color: var(--muted);
+    margin: 0 8px;
+  }
+
+  /* FOOTER */
+  footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px;
+    font-family: var(--heading-stack);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    main { padding: 0 22px; }
+    section { padding: 48px 0; }
+    section:first-of-type { padding-top: 72px; }
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .about-photo { width: 88px; height: 88px; }
+    .built-grid {
+      grid-template-columns: 1fr;
+    }
+    .timeline {
+      grid-template-columns: 72px 1fr;
+      column-gap: 16px;
+    }
+    .hero .subline { max-width: none; }
+    footer { padding: 24px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="eyebrow">Gonçalo Louzada</p>
+    <h1>I run operations and ship AI&nbsp;tools.</h1>
+    <p class="subline">Ten years at the leadership layer, hands on AI for the last three.</p>
+    <p class="tertiary">Former CEO. Built and sold software. Now building it myself.</p>
+    <div class="location">BASED IN PORTUGAL · REMOTE</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <p class="label">01 / About</p>
+    <div class="about-grid">
+      <image-slot
+        id="portrait"
+        class="about-photo"
+        shape="rect"
+        placeholder="DROP PHOTO">
+      </image-slot>
+      <div class="about-text">
+        <p>I've spent a decade at the leadership layer. Four years as CEO of Whitesmith, scaling it from €1M to €2M with a team of around thirty and healthy margins. In between I co-founded Qold, took it to paying customers, then shut it down when the unit economics didn't stack up.</p>
+        <p>Now I build the systems and processes that let companies execute without chaos. I've also been shipping AI tools in production for the last three years, both inside Whitesmith and for clients.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURRENTLY -->
+  <section class="currently">
+    <p class="label">02 / Currently</p>
+    <div class="currently-box">
+      <p><span class="tag"><span class="dot"></span>Now</span> Open to Chief of Staff, Head of Operations, and Founder's Associate roles. Also taking on fractional engagements helping founders identify and automate internal processes.</p>
+    </div>
+  </section>
+
+  <!-- BUILT -->
+  <section class="built">
+    <p class="label">03 / Built</p>
+    <div class="built-grid">
+      <article class="card">
+        <h3 class="card-name">Internal Reporting System</h3>
+        <p class="card-desc">Recovered ~40 hours/month at Whitesmith by replacing manual reporting with an LLM-powered pipeline.</p>
+        <p class="card-stack">Claude · Make · Gumloop</p>
+      </article>
+      <article class="card">
+        <h3 class="card-name">AI Bumblebee</h3>
+        <p class="card-desc">LLM-powered business AI readiness assessment. Helps founders and leadership teams identify where AI actually fits in their operations.</p>
+        <p class="card-stack">LLM APIs · Web app</p>
+      </article>
+      <article class="card">
+        <h3 class="card-name">BriefTorch</h3>
+        <p class="card-desc">Chrome extension that summarises web pages with GPT. Built end-to-end and shipped to the Chrome Web Store.</p>
+        <p class="card-stack">Chrome extension · GPT</p>
+      </article>
+      <article class="card">
+        <h3 class="card-name">Personal automation system</h3>
+        <p class="card-desc">Agentic workflow for document analysis and content generation. Built in Cowork to handle structured information processing.</p>
+        <p class="card-stack">Cowork · Claude</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="experience">
+    <p class="label">04 / Experience</p>
+    <div class="timeline">
+
+      <div class="year">2025</div>
+      <div class="role">
+        <span class="org">bloq.it</span>
+        <span class="what">Senior Success Manager.</span>
+      </div>
+
+      <div class="year">2015 — 2025</div>
+      <div class="role">
+        <span class="org">Whitesmith</span>
+        <span class="what">Joined in product &amp; ops, left as Managing Director.</span>
+        <span class="progression">
+          Product &amp; Ops<br>
+          Head of Product &amp; Ops<br>
+          CEO<br>
+          Managing Director
+        </span>
+      </div>
+
+      <div class="year">2015 — 2017</div>
+      <div class="role">
+        <span class="org">Qold</span>
+        <span class="what">Co-founder &amp; CEO. Started inside Whitesmith, taken to paying customers, then wound down.</span>
+      </div>
+
+      <div class="year">2013 — 2014</div>
+      <div class="role">
+        <span class="org">AIRC &amp; ISA</span>
+        <span class="what">Product Engineer.</span>
+      </div>
+
+      <div class="year">2008 — 2013</div>
+      <div class="role">
+        <span class="org">Universidade de Coimbra</span>
+        <span class="what">MSc, Biomedical Engineering.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact">
+    <p class="label">05 / Contact</p>
+    <p>Hiring or building something? I'm open to full-time roles and fractional work. Easiest way to reach me is email.</p>
+    <p class="links">
+      <a href="mailto:g@glouzada.com">g@glouzada.com</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/glouzada" target="_blank" rel="noopener">LinkedIn</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 &nbsp;·&nbsp; Gonçalo Louzada
+</footer>
+
+</body>
+</html>
