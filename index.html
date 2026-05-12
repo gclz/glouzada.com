@@ -7,14 +7,82 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="light dark">
+
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+
 <style>
-  :root {
+  /* ───────────────────────── LIGHT (default) ───────────────────────── */
+  :root,
+  [data-theme="light"] {
     --accent: #b5483a;
     --bg: #fafaf7;
     --fg: #1a1a1a;
     --muted: #6b6b66;
     --rule: #e3e2dc;
     --currently-bg: #f1efe7;
+    --photo-bg: #ecebe4;
+    --card-hover-mix: 5%;
+    --photo-filter: none;
+  }
+
+  /* ───────────────────────── WARM DARK ─────────────────────────────── */
+  /* Espresso tones — keeps the paper-feel soul of the light theme.
+     Accent is the same terracotta hue, lifted in lightness so it
+     reads cleanly on the dark surface. */
+  [data-theme="dark"] {
+    --accent: oklch(72% 0.13 35);
+    --bg: oklch(16% 0.008 60);
+    --fg: oklch(92% 0.008 80);
+    --muted: oklch(62% 0.012 70);
+    --rule: oklch(26% 0.010 60);
+    --currently-bg: oklch(20% 0.012 55);
+    --photo-bg: oklch(24% 0.012 60);
+    --card-hover-mix: 9%;
+    --photo-filter: brightness(0.95) saturate(0.95);
+  }
+
+  /* ───────────────────────── ALTERNATE MOODS ───────────────────────── */
+  /* To swap moods, replace the [data-theme="dark"] block above with
+     one of the blocks below (and remove the leading comment markers). */
+  /*
+  [data-theme="dark"] {                          /* NEUTRAL CHARCOAL */
+    --accent: oklch(72% 0.13 35);
+    --bg: oklch(17% 0 0);
+    --fg: oklch(93% 0 0);
+    --muted: oklch(62% 0 0);
+    --rule: oklch(26% 0 0);
+    --currently-bg: oklch(21% 0 0);
+    --photo-bg: oklch(24% 0 0);
+    --card-hover-mix: 9%;
+    --photo-filter: brightness(0.95) saturate(0.95);
+  }
+  */
+  /*
+  [data-theme="dark"] {                          /* COOL INK */
+    --accent: oklch(74% 0.13 40);
+    --bg: oklch(16% 0.018 255);
+    --fg: oklch(92% 0.005 250);
+    --muted: oklch(62% 0.012 250);
+    --rule: oklch(26% 0.015 250);
+    --currently-bg: oklch(20% 0.018 255);
+    --photo-bg: oklch(24% 0.015 250);
+    --card-hover-mix: 9%;
+    --photo-filter: brightness(0.95) saturate(0.95);
+  }
+  */
+
+  :root {
     --heading-stack: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --body-stack: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
@@ -23,18 +91,36 @@
   body {
     background: var(--bg);
     color: var(--fg);
-    font-family: var(--body-stack);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 16.5px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+
+  /* Smooth crossfade on manual toggle (no FOUC because theme is set
+     in <head> before paint, so the initial render doesn't transition). */
+  body,
+  a,
+  section,
+  footer,
+  .card,
+  .built-grid,
+  .currently-box,
+  .about-photo,
+  .timeline .role .progression {
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease;
+  }
+
   a {
     color: var(--accent);
     text-decoration: none;
     border-bottom: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
-    transition: border-color 120ms ease;
+    transition: border-color 120ms ease, color 180ms ease;
   }
   a:hover { border-bottom-color: var(--accent); }
   p { margin: 0 0 1em 0; text-wrap: pretty; }
@@ -122,9 +208,11 @@
     width: 96px;
     height: 96px;
     border: 1px solid var(--rule);
-    background: #ecebe4;
+    background: var(--photo-bg);
     object-fit: cover;
     display: block;
+    filter: var(--photo-filter);
+    transition: filter 180ms ease, border-color 180ms ease, background-color 180ms ease;
   }
   .about-text p { text-align: justify; }
   .about-text p:last-child { margin-bottom: 0; }
@@ -178,12 +266,12 @@
     display: flex;
     flex-direction: column;
     background: transparent;
-    transition: background 140ms ease;
+    transition: background-color 140ms ease, border-color 180ms ease;
     cursor: default;
     min-height: 150px;
   }
   .card:hover {
-    background: color-mix(in oklab, var(--accent) 5%, transparent);
+    background: color-mix(in oklab, var(--accent) var(--card-hover-mix), transparent);
   }
   .card:hover .card-name {
     color: var(--accent);
@@ -267,6 +355,34 @@
     text-transform: uppercase;
     color: var(--muted);
     border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .theme-toggle {
+    font-family: var(--heading-stack);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    padding: 4px 0;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: color 140ms ease, border-color 140ms ease;
+  }
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    color: var(--fg);
+    border-bottom-color: var(--muted);
+    outline: 0;
+  }
+  .theme-toggle .glyph {
+    display: inline-block;
+    margin-right: 6px;
+    transform: translateY(-1px);
   }
 
   /* MOBILE */
@@ -288,6 +404,13 @@
     }
     .hero .subline { max-width: none; }
     footer { padding: 24px 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
   }
 </style>
 </head>
@@ -409,8 +532,55 @@
 </main>
 
 <footer>
-  © 2026 &nbsp;·&nbsp; Gonçalo Louzada
+  <span>© 2026 &nbsp;·&nbsp; Gonçalo Louzada</span>
+  <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+    <span class="glyph" id="theme-glyph">☾</span><span id="theme-label">Dark</span>
+  </button>
 </footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    var glyph = document.getElementById('theme-glyph');
+    var label = document.getElementById('theme-label');
+
+    function render() {
+      var current = root.getAttribute('data-theme');
+      if (current === 'dark') {
+        glyph.textContent = '☀';
+        label.textContent = 'Light';
+        btn.setAttribute('aria-label', 'Switch to light mode');
+      } else {
+        glyph.textContent = '☾';
+        label.textContent = 'Dark';
+        btn.setAttribute('aria-label', 'Switch to dark mode');
+      }
+    }
+
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      render();
+    });
+
+    try {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function (e) {
+        if (!localStorage.getItem('theme')) {
+          root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+          render();
+        }
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    } catch (e) {}
+
+    render();
+  })();
+</script>
 
 </body>
 </html>
