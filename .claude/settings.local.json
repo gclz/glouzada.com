@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gunzip -c \"/Users/goncalo/.claude/projects/-Users-goncalo-Documents-Projects-glouzada-com/1a1199ea-40a0-4947-ac0c-bfb5e5fa371b/tool-results/webfetch-1778616111731-p6im8f.bin\")",
+      "Bash(tar -xO \"glouzada-com/project/index.html\")",
+      "Bash(tar -t)",
+      "Bash(tar -xO \"glouzada-com/project/image-slot.js\")",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ]
+  }
+}
