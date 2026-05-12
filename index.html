@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
-<script src="image-slot.js"></script>
 <style>
   :root {
     --accent: #b5483a;
@@ -124,12 +123,8 @@
     height: 96px;
     border: 1px solid var(--rule);
     background: #ecebe4;
-  }
-  .about-photo::part(empty) {
-    color: var(--muted);
-    font-family: var(--heading-stack);
-    font-size: 9.5px;
-    letter-spacing: 0.1em;
+    object-fit: cover;
+    display: block;
   }
   .about-text p:last-child { margin-bottom: 0; }
 
@@ -312,12 +307,7 @@
   <section class="about">
     <p class="label">01 / About</p>
     <div class="about-grid">
-      <image-slot
-        id="portrait"
-        class="about-photo"
-        shape="rect"
-        placeholder="DROP PHOTO">
-      </image-slot>
+      <img src="photo.jpg" alt="Gonçalo Louzada" class="about-photo">
       <div class="about-text">
         <p>I've spent a decade at the leadership layer. Four years as CEO of Whitesmith, scaling it from €1M to €2M with a team of around thirty and healthy margins. In between I co-founded Qold, took it to paying customers, then shut it down when the unit economics didn't stack up.</p>
         <p>Now I build the systems and processes that let companies execute without chaos. I've also been shipping AI tools in production for the last three years, both inside Whitesmith and for clients.</p>
