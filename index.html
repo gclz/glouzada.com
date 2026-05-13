@@ -13,7 +13,9 @@
   (function () {
     try {
       var stored = localStorage.getItem('theme');
-      var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var theme = (stored === 'light' || stored === 'dark')
+        ? stored
+        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
     } catch (e) {
       document.documentElement.setAttribute('data-theme', 'light');
@@ -545,31 +547,43 @@
     var glyph = document.getElementById('theme-glyph');
     var label = document.getElementById('theme-label');
 
+    function getStored() {
+      try { return localStorage.getItem('theme'); } catch (e) { return null; }
+    }
+
     function render() {
-      var current = root.getAttribute('data-theme');
-      if (current === 'dark') {
-        glyph.textContent = '☀';
-        label.textContent = 'Light';
-        btn.setAttribute('aria-label', 'Switch to light mode');
-      } else {
+      var stored = getStored();
+      if (stored === 'dark') {
         glyph.textContent = '☾';
         label.textContent = 'Dark';
+        btn.setAttribute('aria-label', 'Switch to auto mode');
+      } else if (stored === 'light') {
+        glyph.textContent = '☀';
+        label.textContent = 'Light';
         btn.setAttribute('aria-label', 'Switch to dark mode');
+      } else {
+        glyph.textContent = '◑';
+        label.textContent = 'Auto';
+        btn.setAttribute('aria-label', 'Switch to light mode');
       }
     }
 
     btn.addEventListener('click', function () {
-      var current = root.getAttribute('data-theme');
-      var next = current === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
+      var stored = getStored();
+      var next = !stored ? 'light' : stored === 'light' ? 'dark' : null;
+      try {
+        if (next) localStorage.setItem('theme', next);
+        else localStorage.removeItem('theme');
+      } catch (e) {}
+      var effectiveTheme = next || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      root.setAttribute('data-theme', effectiveTheme);
       render();
     });
 
     try {
       var mq = window.matchMedia('(prefers-color-scheme: dark)');
       var onChange = function (e) {
-        if (!localStorage.getItem('theme')) {
+        if (!getStored()) {
           root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
           render();
         }
